@@ -1,26 +1,182 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="container">
+    <form class="card" @submit.prevent="submitHandler">
+      <h1>Анкета на Vue разработчика!</h1>
+
+      <app-input
+        placeholder="Введи имя"
+        :error="errors.name"
+        label="Как тебя зовут?"
+        v-model:value="name"
+      ></app-input>
+
+      <div class="form-control">
+        <label for="age">Выбери возраст</label>
+        <input type="number" id="age" max="70" v-model.number="age" />
+      </div>
+
+      <div class="form-control">
+        <label for="city">Твой город</label>
+        <select id="city" v-model="city">
+          <option value="spb">Санкт-Петербург</option>
+          <option value="msk">Москва</option>
+          <option value="kzn">Казань</option>
+          <option value="nsk">Новосибирск</option>
+        </select>
+      </div>
+
+      <div class="form-checkbox">
+        <span class="label">Готов к переезду в Токио?</span>
+        <div class="checkbox">
+          <label
+            ><input type="radio" v-model="relocate" name="trip" value="yes" />
+            Да</label
+          >
+        </div>
+
+        <div class="checkbox">
+          <label
+            ><input type="radio" v-model="relocate" name="trip" value="no" />
+            Нет</label
+          >
+        </div>
+      </div>
+
+      <div class="form-checkbox">
+        <span class="label">Что знаешь во Vue?</span>
+        <div class="checkbox">
+          <label
+            ><input
+              type="checkbox"
+              v-model="skills"
+              name="skills"
+              value="vuex"
+            />
+            Vuex</label
+          >
+        </div>
+        <div class="checkbox">
+          <label
+            ><input
+              type="checkbox"
+              v-model="skills"
+              name="skills"
+              value="cli"
+            />
+            Vue CLI</label
+          >
+        </div>
+        <div class="checkbox">
+          <label
+            ><input
+              type="checkbox"
+              v-model="skills"
+              name="skills"
+              value="router"
+            />
+            Vue Router</label
+          >
+        </div>
+      </div>
+
+      <div class="form-checkbox">
+        <span class="label">Правила нашей компании</span>
+        <div class="checkbox">
+          <label
+            ><input type="checkbox" v-model="agree" /> С правилами
+            согласен!</label
+          >
+        </div>
+      </div>
+
+      <button type="submit" class="btn primary">Отправить</button>
+      <button class="btn dangerous">Показать</button>
+    </form>
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import AppInput from "./AppInput";
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+  data() {
+    return {
+      name: "",
+      age: 23,
+      city: "spb",
+      relocate: "yes",
+      skills: [],
+      agree: false,
+      errors: {
+        name: null,
+      },
+    };
+  },
+  components: { AppInput },
+  mounted() {
+    // Load form data from local storage if available
+    const formData = localStorage.getItem("formData");
+    if (formData) {
+      const parsedData = JSON.parse(formData);
+      // Restore form data
+      this.name = parsedData.name || "";
+      this.age = parsedData.age || 23;
+      this.city = parsedData.city || "spb";
+      this.relocate = parsedData.relocate || "yes";
+      this.skills = parsedData.skills || [];
+      this.agree = parsedData.agree || false;
+    }
+  },
+  methods: {
+    push() {
+      const savedValue = localStorage.getItem(FormData);
+      console.log(savedValue);
+    },
+    formIsValid() {
+      let isValid = true;
+
+      if (this.name.length === 0) {
+        this.errors.name = "Имя не может быть пустым";
+        isValid = false;
+      } else {
+        this.errors.name = null;
+      }
+
+      return isValid;
+    },
+    submitHandler() {
+      if (this.formIsValid()) {
+        // Save form data to local storage
+        const formData = {
+          name: this.name,
+          age: this.age,
+          city: this.city,
+          relocate: this.relocate,
+          skills: this.skills,
+          agree: this.agree,
+        };
+        localStorage.setItem("formData", JSON.stringify(formData));
+
+        // Log form data to console
+        console.group("Form Data");
+        console.log("Name:", this.name);
+        console.log("Age:", this.age);
+        console.log("City:", this.city);
+        console.log("To Tokyo:", this.relocate);
+        console.log("Skills:", this.skills);
+        console.log("Agree:", this.agree);
+        console.groupEnd();
+      }
+    },
+  },
+};
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+.form-control small {
+  color: #e53935;
+}
+
+.form-control.invalid input {
+  border-color: #e53935;
 }
 </style>
