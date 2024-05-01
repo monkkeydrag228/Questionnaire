@@ -130,6 +130,7 @@ export default {
     push() {
       const savedValue = localStorage.getItem(FormData);
       console.log(savedValue);
+     
     },
     formIsValid() {
       let isValid = true;
@@ -145,7 +146,7 @@ export default {
     },
     submitHandler() {
       if (this.formIsValid()) {
-        this.name =  "";
+       
         // Save form data to local storage
         const formData = {
           name: this.name,
@@ -166,6 +167,9 @@ export default {
         console.log("Skills:", this.skills);
         console.log("Agree:", this.agree);
         console.groupEnd();
+
+
+        this.name =  "";
       }
     },
   },
