@@ -145,6 +145,7 @@ export default {
     },
     submitHandler() {
       if (this.formIsValid()) {
+        this.name =  "";
         // Save form data to local storage
         const formData = {
           name: this.name,
