@@ -169,7 +169,12 @@ export default {
         console.groupEnd();
 
 
-        this.name =  "";
+        this.name = "";
+      this.age =  23;
+      this.city = "spb";
+      this.relocate =  "yes";
+      this.skills =  [];
+      this.agree = false;
       }
     },
   },
